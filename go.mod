@@ -1,4 +1,4 @@
-module botdofus
+module unirobot
 
 go 1.23.0
 
