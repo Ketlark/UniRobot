@@ -1,0 +1,187 @@
+package main
+
+/*
+#cgo CFLAGS: -x objective-c
+#cgo LDFLAGS: -framework ScreenCaptureKit -framework AppKit -framework Foundation
+
+#include <ScreenCaptureKit/ScreenCaptureKit.h>
+#include <AppKit/AppKit.h>
+#include <Foundation/Foundation.h>
+
+// Fonction pour démarrer la capture d'une fenêtre avec résolution dynamique
+static SCStream *startScreenCapture(uint32_t windowID, int width, int height) {
+	SCShareableContent *content = [SCShareableContent alloc];
+
+    // Ajouter la fenêtre spécifique à capturer
+    SCWindow *window = [SCWindow windowID:windowID];
+    [content addWindow:window];
+
+    // Configuration du flux avec résolution dynamique
+    SCStreamConfiguration *config = [SCStreamConfiguration new];
+    config.pixelFormat = kCVPixelFormatType_32BGRA;
+    config.captureResolution = SCCaptureResolutionAutomatic;
+
+    // Créer un flux de capture avec la configuration
+    SCStream *stream = [SCStream streamWithConfiguration:config];
+    [stream start];
+
+    return stream;
+}
+
+// Fonction pour capturer un cadre du flux
+static CGImageRef captureFrame(SCStream *stream) {
+    // Capture un cadre à partir du flux
+    // Cette fonction peut retourner une image ou gérer le flux d'images comme vous le souhaitez.
+    // L'image peut être récupérée via `SCStream::nextFrame` et être envoyée à Go pour le traitement.
+    CGImageRef imageRef = [stream nextFrame];
+    // Vous pouvez maintenant manipuler `imageRef` dans Go en l'envoyant à une fonction Go pour le traitement.
+	 return imageRef; // L'image capturée sera utilisée dans le code Go
+}
+*/
+import "C"
+
+import (
+	"fmt"
+)
+
+/*func main() {
+	// Créer un buffer pour capturer l'image
+	var buf bytes.Buffer
+
+	// Créer un buffer pour capturer les erreurs
+	var stderr bytes.Buffer
+
+	// Lancer FFmpeg pour capturer une image de l'écran et rediriger la sortie vers le buffer
+	cmd := exec.Command("ffmpeg",
+		"-f", "avfoundation", // Utiliser le framework AVFoundation pour macOS
+		"-i", "3", // Capture l'écran principal (ajuste ce numéro si nécessaire)
+		"-vframes", "1", // Capture une seule image
+		"-video_size", "1920x1080", // Taille de la capture
+		"-pix_fmt", "rgb24", // Utilisation d'un format RGB compatible
+		"-vcodec", "png",
+		"-f", "image2pipe", // Sortie au format image2pipe
+		"pipe:1", // Envoie la sortie directement dans un flux
+	)
+
+	// Rediriger la sortie de la commande vers le buffer
+	cmd.Stdout = &buf
+	cmd.Stderr = &stderr
+
+	// Exécution de la commande FFmpeg
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("Erreur lors de la capture d'image : %v\nstderr: %s", err, stderr.String())
+	}
+
+	filename := "captured_image.png"
+
+	// Lire et traiter l'image depuis le buffer
+	err = saveImageToFile(&buf, filename)
+	if err != nil {
+		log.Fatalf("Erreur lors de la sauvegarde de l'image : %v", err)
+	}
+
+	log.Println("Image capturée et sauvegardée sous 'captured_image.png'")
+
+	// Preprocess Image
+	processedFilename := "processed_image.png"
+	if err := preprocessImage(filename, processedFilename); err != nil {
+		log.Fatalf("Erreur lors du prétraitement de l'image : %v", err)
+	}
+
+	// Perform OCR
+	extractedText := extractText(processedFilename)
+	fmt.Println("Texte extrait:", extractedText)
+}
+
+// Preprocess image for better OCR accuracy
+func preprocessImage(inputPath, outputPath string) error {
+	img := gocv.IMRead(inputPath, gocv.IMReadGrayScale) // Convert to grayscale
+	if img.Empty() {
+		log.Fatalf("Failed to read image: %s", inputPath)
+	}
+
+	// Reduce noise
+	gocv.GaussianBlur(img, &img, image.Pt(3, 3), 0, 0, gocv.BorderDefault)
+
+	// Increase contrast using binary threshold
+	//gocv.Threshold(img, &img, 128, 255, gocv.ThresholdBinary)
+
+	// Save processed image
+	gocv.IMWrite(outputPath, img)
+
+	return nil
+}
+
+// Fonction pour sauvegarder l'image capturée depuis le buffer
+func saveImageToFile(buf *bytes.Buffer, filename string) error {
+	// Décoder l'image depuis le buffer
+	img, _, err := image.Decode(buf)
+	if err != nil {
+		return fmt.Errorf("erreur lors du décodage de l'image : %v", err)
+	}
+
+	// Ouvrir un fichier pour sauvegarder l'image convertie en PNG
+	outFile, err := os.Create(filename)
+	if err != nil {
+		return fmt.Errorf("erreur lors de la création du fichier de sortie : %v", err)
+	}
+	defer outFile.Close()
+
+	// Encoder l'image en PNG et l'écrire dans le fichier de sortie
+	err = png.Encode(outFile, img)
+	if err != nil {
+		return fmt.Errorf("erreur lors de l'encodage PNG : %v", err)
+	}
+
+	return nil
+}
+
+// Perform OCR on processed image
+func extractText(imagePath string) string {
+	client := gosseract.NewClient()
+	defer client.Close()
+
+	client.SetImage(imagePath)
+	client.SetLanguage("eng")
+	client.SetVariable("tessedit_create_txt", "1") // Ensures text output with spaces
+	client.SetVariable("preserve_interword_spaces", "1")
+	client.SetVariable("tessedit_ocr_engine_mode", "0")                                                                     // Use "0" for legacy OCR mode                                                                                       // Use PSM 6 (uniform block of text)
+	client.SetVariable("tessedit_char_whitelist", "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZaàbcdeéfghijklmnopqrstuvwxyz-_()[]") // Whitelist only valid characters
+	client.SetPageSegMode(7)                                                                                                // Try PSM 3 or 7 based on your needs
+
+	text, err := client.Text()
+	if err != nil {
+		log.Fatalf("Erreur OCR : %v", err)
+	}
+
+	return text
+}*/
+
+func main() {
+	// ID de la fenêtre à capturer (assurez-vous d'avoir l'ID de la fenêtre valide)
+	windowID := uint32(12345) // Remplacez avec un ID de fenêtre valide
+
+	// Définir la résolution dynamique pour la capture
+	width := 1920
+	height := 1080
+
+	// Démarrer la capture de l'écran pour la fenêtre avec la configuration dynamique
+	stream := C.startScreenCapture(C.uint32_t(windowID), C.int(width), C.int(height))
+
+	if stream == nil {
+		fmt.Println("Erreur : Impossible de démarrer la capture d'écran")
+		return
+	}
+
+	// Capture un cadre à partir du flux
+	imageRef := C.captureFrame(stream)
+
+	if imageRef == nil {
+		fmt.Println("Erreur : Impossible de capturer un cadre")
+		return
+	}
+
+	// Vous pouvez maintenant manipuler l'image capturée
+	fmt.Println("Capture d'écran de la fenêtre réussie.")
+}
