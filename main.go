@@ -30,7 +30,7 @@ func freeMemorySwift(libc uintptr, ptrToFree unsafe.Pointer) {
 	freeMemory(ptrToFree)
 }
 
-func main() {
+func mai2n() {
 	libc, err := purego.Dlopen("./ScreenshotHelper.dylib", purego.RTLD_NOW|purego.RTLD_GLOBAL)
 	if err != nil {
 		panic(err)

@@ -1,4 +1,4 @@
-package memory
+package utils
 
 import (
 	"fmt"

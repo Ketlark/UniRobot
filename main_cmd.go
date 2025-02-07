@@ -7,7 +7,7 @@ import (
 	"os/exec"
 )
 
-func main() {
+func mai454n() {
 	// Run the Swift script to capture the screenshot
 	cmd := exec.Command("./screenshot")
 	var out bytes.Buffer
